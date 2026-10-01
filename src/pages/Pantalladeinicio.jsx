@@ -1,9 +1,10 @@
 import Container from "react-bootstrap/Container";
 import { Button, Row, Col, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import imagenFondo from "../imagenes/imagen1.avif";
 import "../App.css";
 
-const Pantalladeinicio = ({ onIngresar }) => {
+const Pantalladeinicio = () => {
   return (
     <Container
       fluid
@@ -32,10 +33,11 @@ const Pantalladeinicio = ({ onIngresar }) => {
               </Card.Text>
 
               <Button 
+                as={Link}
+                to="/panel"
                 variant="primary" 
                 size="lg" 
                 className="px-5 py-3 fw-semibold rounded-3 w-100 shadow-sm"
-                onClick={onIngresar}
               >
                 Ingresar al sistema
               </Button>
