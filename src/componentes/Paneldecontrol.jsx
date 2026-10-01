@@ -15,12 +15,12 @@ function Dashboard() {
                 <Row className="g-4">
                     {/*Espacios Disponibles */}
                     <Col xs={12} md={4}>
-                        <article className="dashboard-card h-100">
-                            <div className="dashboard-icon">
+                        <article className="dashboard-card h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
+                            <div className="dashboard-icon text-primary">
                                 <i className="bi bi-p-square-fill"></i>
                             </div>
                             <div className="dashboard-content">
-                                <span className="dashboard-label">ESPACIOS DISPONIBLES</span>
+                                <span className="dashboard-label fw-semibold text-primary">ESPACIOS DISPONIBLES</span>
                                 <p id="espacios-disponibles" className="dashboard-number">50 / 50</p>
                                 <small>Espacios libres actualmente</small>
                             </div>
@@ -29,12 +29,12 @@ function Dashboard() {
 
                     {/* Vehículos Actuales */}
                     <Col xs={12} md={4}>
-                        <article className="dashboard-card h-100">
-                            <div className="dashboard-icon">
+                        <article className="dashboard-card h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
+                            <div className="dashboard-icon text-primary">
                                 <i className="bi bi-car-front-fill"></i>
                             </div>
                             <div className="dashboard-content">
-                                <span className="dashboard-label">VEHÍCULOS ACTUALES</span>
+                                <span className="dashboard-label fw-semibold text-primary">VEHÍCULOS ACTUALES</span>
                                 <p id="vehiculos-actuales" className="dashboard-number">0</p>
                                 <small>Vehículos dentro del estacionamiento</small>
                             </div>
@@ -43,12 +43,12 @@ function Dashboard() {
 
                     {/* Estado del Sistema */}
                     <Col xs={12} md={4}>
-                        <article className="dashboard-card dashboard-card-estado h-100">
-                            <div className="dashboard-icon">
+                        <article className="dashboard-card dashboard-card-estado h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
+                            <div className="dashboard-icon text-primary">
                                 <i className="bi bi-percent"></i>
                             </div>
                             <div className="dashboard-content">
-                                <span className="dashboard-label">ESTADO DEL SISTEMA</span>
+                                <span className="dashboard-label fw-semibold text-primary">ESTADO DEL SISTEMA</span>
                                 <p id="estado-sistema" className="estado-texto">
                                     <span id="estado-indicador" className="estado-indicador"></span>
                                     <span id="texto-estado">Capacidad normal</span>
