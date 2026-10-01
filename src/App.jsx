@@ -1,8 +1,20 @@
+import { useState } from "react";
 import CustomNavbar from "./componentes/Navbar";
 import Footer from "./componentes/Footer";
-import Dashboard from "./componentes/Dashboard";
+import Pantalladeinicio from "./componentes/Pantalladeinicio";
+import Dashboard from "./componentes/Paneldecontrol";
+import Controldeacceso from "./componentes/Controldeacceso";
+import Espaciosysectores from "./componentes/Espaciosysectores";
+import Abonados from "./componentes/Abonados";
+import Tarifas from "./componentes/Tarifas";
 
 function App() {
+  const [ingreso, setIngreso] = useState(false);
+
+  if (!ingreso) {
+    return <Pantalladeinicio onIngresar={() => setIngreso(true)} />;
+  }
+
   return (
     <div className="d-flex flex-column min-vh-100">
       <CustomNavbar />
@@ -13,6 +25,10 @@ function App() {
         </div>
         <div className="flex-fill">
           <Dashboard />
+          <Controldeacceso />
+          <Espaciosysectores />
+          <Abonados />
+          <Tarifas />
         </div>
       </main>
       <Footer />
