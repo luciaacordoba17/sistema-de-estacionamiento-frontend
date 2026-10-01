@@ -1,38 +1,31 @@
-import { useState } from "react";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import CustomNavbar from "./componentes/Navbar";
+import Rutas from "./componentes/routes/Rutas";
 import Footer from "./componentes/Footer";
-import Pantalladeinicio from "./componentes/Pantalladeinicio";
-import Dashboard from "./componentes/Paneldecontrol";
-import Controldeacceso from "./componentes/Controldeacceso";
-import Espaciosysectores from "./componentes/Espaciosysectores";
-import Abonados from "./componentes/Abonados";
-import Tarifas from "./componentes/Tarifas";
 
-function App() {
-  const [ingreso, setIngreso] = useState(false);
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-  if (!ingreso) {
-    return <Pantalladeinicio onIngresar={() => setIngreso(true)} />;
-  }
+function AppLayout() {
+  const { pathname } = useLocation();
+  const esInicio = pathname === "/";
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <CustomNavbar />
+      {!esInicio && <CustomNavbar />}
       <main className="flex-fill">
-        <div className="container mt-4">
-          <h1>Panel de Control</h1>
-          <p>Bienvenido al sistema de estacionamiento.</p>
-        </div>
-        <div className="flex-fill">
-          <Dashboard />
-          <Controldeacceso />
-          <Espaciosysectores />
-          <Abonados />
-          <Tarifas />
-        </div>
+        <Rutas />
       </main>
-      <Footer />
+      {!esInicio && <Footer />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppLayout />
+    </Router>
   );
 }
 

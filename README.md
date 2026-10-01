@@ -1,16 +1,40 @@
-# React + Vite
+# Sistema de estacionamiento FRONTEND
+ 
+ Trabajo Practico Desarrollado para la materia Programacion IV
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Las Tecnologias que utilizamos fueron:
+. React (VITE)
+. ReactBootstrap
+. React Router DOM (Para la manipulacion del DOM virtual)
+. JavaScript
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# Estructura del Proyecto 
+  
+  El proyecto sigue una estructura organizadas de carpetas para separar los componentes estructurales de las vistas principales 
 
-## React Compiler
+# Caracteristicas principales
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ .Navegacion dinamica aplicando el *react-router-dom* para alternar entre distintas paginas si la necesidad de volver a cargar toda la pagina
 
-## Expanding the ESLint configuration
+ .Renderizado utilizando el *map* para evitar la repeticion de codigo y optimizar la reutilizacion de los componentes, ademas de mejorar la experencia para el usuario 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ .Diseño responsivo para que se pueda adaptar a cualquier disposito sin importar su resolucion, esto lo aplicamos atraves de *react-bootstrap*
+
+ # Instrucciones para su instalacion y ejecucion local
+  
+  .*Clonar el Repositorio*
+     git clone <https://github.com/luciaacordoba17/sistema-de-estacionamiento-frontend.git>
+
+  . *Instalar dependencias*
+    "bootstrap"
+    "bootstrap-icons"
+    "react"
+    "react-bootstrap"
+    "react-dom"
+    "react-router-dom" 
+  
+  .*Ejecutar el proyecto*
+
+    .npm run dev
+

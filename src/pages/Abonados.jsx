@@ -15,13 +15,24 @@ const Abonados = () => {
             </Card.Body>
             <Form className="p-4 border rounded shadow-sm bg-light">
                 <Row className="g-3 align-items-end">
-                    <Col xs={12} md={4}>
+                    <Col xs={12} md={6}>
                         <Form.Group controlId="nombreAbonado">
                             <Form.Label>Nombre y Apellido</Form.Label>
                             <Form.Control type="text" placeholder="Ingrese el nombre del abonado" />
                         </Form.Group>
                     </Col>
-                    <Col xs={12} md={4}>
+                    <Col xs={12} md={6}>
+                        <Form.Group controlId="emailAbonado">
+                            <Form.Label className="fw-semibold text-primary">Email</Form.Label>
+                            <Form.Control
+                                type="email"
+                                name="email"
+                                placeholder="Ingrese el email del abonado"
+                                required
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col xs={12} md={6}>
                         <Form.Group controlId="planAbonado">
                             <Form.Label className="fw-semibold text-primary">Plan</Form.Label>
                             <Form.Select>
@@ -29,7 +40,7 @@ const Abonados = () => {
                             </Form.Select>
                         </Form.Group>
                     </Col>
-                    <Col xs={12} md={4}>
+                    <Col xs={12} md={6}>
                         <Form.Group controlId="vencimientoAbonado">
                             <Form.Label className="fw-semibold text-primary">Fecha de vencimiento</Form.Label>
                             <Form.Control type="date" name="vencimiento" />
