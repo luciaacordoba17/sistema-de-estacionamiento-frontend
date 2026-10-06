@@ -16,7 +16,7 @@ function AppLayout() {
       <main className="flex-fill">
         <Rutas />
       </main>
-      {!esInicio && <Footer />}
+      {<Footer />}
     </div>
   );
 }
