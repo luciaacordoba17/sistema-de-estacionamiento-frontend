@@ -4,7 +4,7 @@ import Paneldecontrol from "../../pages/Paneldecontrol";
 import Controldeacceso from "../../pages/Controldeacceso";
 import Espaciosysectores from "../../pages/Espaciosysectores";
 import Abonados from "../../pages/Abonados";
-import Tarifas from "../../pages/Tarifas";
+import Tarifas from "../../pages/tarifas.jsx";
 import Error404 from "../../pages/Error404";
 
 const Rutas = () => {
