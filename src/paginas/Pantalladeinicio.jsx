@@ -2,7 +2,6 @@ import Container from "react-bootstrap/Container";
 import { Button, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import imagenFondo from "../imagenes/imagen1.avif";
-import "../App.css";
 
 const Pantalladeinicio = () => {
   return (

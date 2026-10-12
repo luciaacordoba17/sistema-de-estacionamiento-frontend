@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import CustomNavbar from "./componentes/Navbar";
 import Rutas from "./componentes/routes/Rutas";
 import Footer from "./componentes/Footer";
@@ -16,17 +16,13 @@ function AppLayout() {
       <main className="flex-fill">
         <Rutas />
       </main>
-      {<Footer />}
+      {!esInicio && <Footer />}
     </div>
   );
 }
 
 function App() {
-  return (
-    <Router>
-      <AppLayout />
-    </Router>
-  );
+  return <AppLayout />;
 }
 
 export default App;

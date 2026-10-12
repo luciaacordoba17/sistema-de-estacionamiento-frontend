@@ -29,7 +29,7 @@ FRONTED-sistema/
 │   │   ├── Footer.jsx
 │   │   ├── Navbar.jsx
 │   │   └── Itemtarifas.jsx
-│   ├── pages/
+│   ├── paginas/
 │   │   ├── Abonados.jsx
 │   │   ├── Controledeacceso.jsx
 │   │   ├── Error404.jsx
@@ -53,4 +53,3 @@ FRONTED-sistema/
     npm install 
 
     npm run dev
-

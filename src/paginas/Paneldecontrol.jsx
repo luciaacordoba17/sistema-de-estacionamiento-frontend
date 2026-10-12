@@ -1,7 +1,23 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {
+  CAPACIDAD_ESTACIONAMIENTO,
+  useOcupacionEstacionamiento,
+} from "../hooks/useOcupacionEstacionamiento";
 
 function Dashboard() {
+  const { vehiculosActuales, espaciosDisponibles } =
+    useOcupacionEstacionamiento();
+  const porcentajeOcupacion = Math.round(
+    (vehiculosActuales / CAPACIDAD_ESTACIONAMIENTO) * 100,
+  );
+  const estadoCapacidad =
+    porcentajeOcupacion >= 90
+      ? "Capacidad casi completa"
+      : porcentajeOcupacion >= 70
+        ? "Capacidad alta"
+        : "Capacidad normal";
+
   return (
     <main>
       {/* PANEL DE CONTROL */}
@@ -24,7 +40,7 @@ function Dashboard() {
                   ESPACIOS DISPONIBLES
                 </span>
                 <p id="espacios-disponibles" className="dashboard-number">
-                  50 / 50
+                  {espaciosDisponibles} / {CAPACIDAD_ESTACIONAMIENTO}
                 </p>
                 <small>Espacios libres actualmente</small>
               </div>
@@ -42,7 +58,7 @@ function Dashboard() {
                   VEHÍCULOS ACTUALES
                 </span>
                 <p id="vehiculos-actuales" className="dashboard-number">
-                  0
+                  {vehiculosActuales}
                 </p>
                 <small>Vehículos dentro del estacionamiento</small>
               </div>
@@ -64,9 +80,11 @@ function Dashboard() {
                     id="estado-indicador"
                     className="estado-indicador"
                   ></span>
-                  <span id="texto-estado">Capacidad normal</span>
+                  <span id="texto-estado">{estadoCapacidad}</span>
                 </p>
-                <small id="porcentaje-ocupacion">0% de ocupación</small>
+                <small id="porcentaje-ocupacion">
+                  {porcentajeOcupacion}% de ocupación
+                </small>
               </div>
             </article>
           </Col>

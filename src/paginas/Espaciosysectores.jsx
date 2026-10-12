@@ -1,10 +1,16 @@
-import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import {
+  CAPACIDAD_ESTACIONAMIENTO,
+  useOcupacionEstacionamiento,
+} from '../hooks/useOcupacionEstacionamiento';
 
 const EspaciosSectores = () => {
+  const { vehiculosActuales, espaciosDisponibles } =
+    useOcupacionEstacionamiento();
+
   return (
     <section id="espacios" className="container py-5">
       <Card className="shadow-sm border-0 rounded-4 p-4 p-md-5">
@@ -52,14 +58,16 @@ const EspaciosSectores = () => {
                     <span className="text-primary fs-4"><i className="bi bi-car-front-fill"></i></span>
                     <span className="fw-semibold text-dark">Espacios ocupados</span>
                   </div>
-                  <span className="badge bg-danger fs-6 px-3 py-2">0</span>
+                  <span className="badge bg-danger fs-6 px-3 py-2">{vehiculosActuales}</span>
                 </div>
                 <div className="bg-white p-3 rounded-3 shadow-sm border d-flex align-items-center justify-content-between">
                   <div className="d-flex align-items-center gap-3">
                     <span className="text-primary fs-4"><i className="bi bi-p-square-fill"></i></span>
                     <span className="fw-semibold text-dark">Espacios disponibles</span>
                   </div>
-                  <span className="badge bg-success fs-6 px-3 py-2">50</span>
+                  <span className="badge bg-success fs-6 px-3 py-2">
+                    {espaciosDisponibles} / {CAPACIDAD_ESTACIONAMIENTO}
+                  </span>
                 </div>
               </>
             </div>
