@@ -13,6 +13,7 @@ const Pantalladeinicio = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
+        minHeight: "100vh",
       }}
     >
       <Row className="w-100 justify-content-center">
