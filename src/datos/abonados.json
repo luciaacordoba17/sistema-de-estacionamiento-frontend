@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "nombre": "Carlos Gómez",
+    "dni": "35489123",
+    "vehiculo": "Volkswagen Gol Trend",
+    "patente": "AB123CD",
+    "tipoAbono": "Mensual",
+    "estado": "Activo"
+  },
+  {
+    "id": 2,
+    "nombre": "María Laura Pérez",
+    "dni": "28765432",
+    "vehiculo": "Renault Sandero",
+    "patente": "EF456GH",
+    "tipoAbono": "Quincenal",
+    "estado": "Activo"
+  },
+  {
+    "id": 3,
+    "nombre": "Esteban Ruarte",
+    "dni": "41234567",
+    "vehiculo": "Fiat Cronos",
+    "patente": "JK789LM",
+    "tipoAbono": "Mensual",
+    "estado": "Inactivo"
+  },
+  {
+    "id": 4,
+    "nombre": "Lucía Albornoz",
+    "dni": "33987654",
+    "vehiculo": "Peugeot 208",
+    "patente": "NP321QR",
+    "tipoAbono": "Mensual",
+    "estado": "Activo"
+  },
+  {
+    "id": 5,
+    "nombre": "Matías Soria",
+    "dni": "37112223",
+    "vehiculo": "Chevrolet Onix",
+    "patente": "ST654UV",
+    "tipoAbono": "Mensual",
+    "estado": "Activo"
+  },
+  {
+    "id": 6,
+    "nombre": "Florencia Navarro",
+    "dni": "31445566",
+    "vehiculo": "Ford Ka",
+    "patente": "WX987YZ",
+    "tipoAbono": "Quincenal",
+    "estado": "Activo"
+  },
+  {
+    "id": 7,
+    "nombre": "Gastón Romero",
+    "dni": "26789123",
+    "vehiculo": "Toyota Hilux",
+    "patente": "AC111EF",
+    "tipoAbono": "Mensual",
+    "estado": "Inactivo"
+  },
+  {
+    "id": 8,
+    "nombre": "Sofía Benítez",
+    "dni": "39887766",
+    "vehiculo": "Volkswagen Suran",
+    "patente": "GH222IJ",
+    "tipoAbono": "Mensual",
+    "estado": "Activo"
+  }
+]

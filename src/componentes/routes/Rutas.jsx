@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import Pantalladeinicio from "../../pages/Pantalladeinicio";
-import Paneldecontrol from "../../pages/Paneldecontrol";
-import Controldeacceso from "../../pages/Controldeacceso";
-import Espaciosysectores from "../../pages/Espaciosysectores";
-import Abonados from "../../pages/Abonados";
-import Tarifas from "../../pages/Tarifas";
-import Error404 from "../../pages/Error404";
+import Pantalladeinicio from "../../paginas/Pantalladeinicio";
+import Paneldecontrol from "../../paginas/Paneldecontrol";
+import Controldeacceso from "../../paginas/Controldeacceso";
+import Espaciosysectores from "../../paginas/Espaciosysectores";
+import Abonados from "../../paginas/Abonados";
+import Tarifas from "../../paginas/tarifas.jsx";
+import Error404 from "../../paginas/Error404";
 
 const Rutas = () => {
   return (
