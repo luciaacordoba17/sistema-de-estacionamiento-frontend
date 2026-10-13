@@ -1,80 +1,123 @@
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge';
-import {
-  CAPACIDAD_ESTACIONAMIENTO,
-  useOcupacionEstacionamiento,
-} from '../hooks/useOcupacionEstacionamiento';
+import React, { useState } from 'react';
+import { Container, Row, Col, Card, Badge, ProgressBar } from 'react-bootstrap';
 
 const EspaciosSectores = () => {
-  const { vehiculosActuales, espaciosDisponibles } =
-    useOcupacionEstacionamiento();
+  // Configuración de los sectores con los 8 abonados en Planta Baja
+  const [plantaBaja] = useState({
+    nombre: 'Sector A (Planta Baja - Techado)',
+    total: 25,
+    ocupados: 8, // Los 8 abonados del JSON
+    tipo: 'General / Abonados'
+  });
+
+  const [plantaAlta] = useState({
+    nombre: 'Sector B (Planta Alta - Ocasional)',
+    total: 25,
+    ocupados: 0, // Vacío para mostrar en vivo
+    tipo: 'General por Hora'
+  });
+
+  const totalOcupados = plantaBaja.ocupados + plantaAlta.ocupados;
+  const capacidadTotal = plantaBaja.total + plantaAlta.total;
+  const porcentajeTotal = Math.round((totalOcupados / capacidadTotal) * 100);
+
+  const porcentajePB = Math.round((plantaBaja.ocupados / plantaBaja.total) * 100);
+  const porcentajePA = Math.round((plantaAlta.ocupados / plantaAlta.total) * 100);
 
   return (
-    <section id="espacios" className="container py-5">
-      <Card className="shadow-sm border-0 rounded-4 p-4 p-md-5">
-        <Card.Body className="text-center p-0 mb-4">
-          <Card.Title className="mb-2 fw-bold text-primary display-6">
-            Espacios y Sectores
-          </Card.Title>
-          <Card.Text className="text-muted fs-5">
-            Gestión de los espacios disponibles y los sectores del estacionamiento.
-          </Card.Text>
-        </Card.Body>
+    <Container className="py-4">
+      <div className="mb-4">
+        <h2 className="fw-bold text-dark m-0">Gestión de Sectores y Espacios</h2>
+        <p className="text-muted m-0" style={{ fontSize: '0.95rem' }}>
+          Monitoreo de ocupación en tiempo real por niveles y sectores de la playa.
+        </p>
+      </div>
 
-        <Row className="g-4">
-          <Col xs={12} lg={6}>
-            <div className="p-4 border rounded-4 bg-light h-100">
-              <h5 className="text-primary fw-bold mb-3">Sectores</h5>
-              <Row className="g-3">
-                <Col xs={12} sm={6}>
-                  <div className="bg-white p-3 rounded-3 text-center shadow-sm border">
-                    <span className="text-primary fs-3 mb-1 d-block">
-                      <i className="bi bi-p-square"></i>
-                    </span>
-                    <span className="fw-semibold d-block text-dark">Sector A</span>
-                    <Badge bg="success" className="mt-2 px-3 py-1">Disponible</Badge>
-                  </div>
-                </Col>
-                <Col xs={12} sm={6}>
-                  <div className="bg-white p-3 rounded-3 text-center shadow-sm border">
-                    <span className="text-primary fs-3 mb-1 d-block">
-                      <i className="bi bi-p-square"></i>
-                    </span>
-                    <span className="fw-semibold d-block text-dark">Sector B</span>
-                    <Badge bg="success" className="mt-2 px-3 py-1">Disponible</Badge>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-          <Col xs={12} lg={6}>
-            <div className="p-4 border rounded-4 bg-light h-100 d-flex flex-column justify-content-between">
-              <h5 className="text-primary fw-bold mb-3">Espacios disponibles</h5>
-              <>
-                <div className="bg-white p-3 rounded-3 shadow-sm border d-flex align-items-center justify-content-between mb-3">
-                  <div className="d-flex align-items-center gap-3">
-                    <span className="text-primary fs-4"><i className="bi bi-car-front-fill"></i></span>
-                    <span className="fw-semibold text-dark">Espacios ocupados</span>
-                  </div>
-                  <span className="badge bg-danger fs-6 px-3 py-2">{vehiculosActuales}</span>
-                </div>
-                <div className="bg-white p-3 rounded-3 shadow-sm border d-flex align-items-center justify-content-between">
-                  <div className="d-flex align-items-center gap-3">
-                    <span className="text-primary fs-4"><i className="bi bi-p-square-fill"></i></span>
-                    <span className="fw-semibold text-dark">Espacios disponibles</span>
-                  </div>
-                  <span className="badge bg-success fs-6 px-3 py-2">
-                    {espaciosDisponibles} / {CAPACIDAD_ESTACIONAMIENTO}
-                  </span>
-                </div>
-              </>
-            </div>
-          </Col>
-        </Row>
+      {/* Tarjeta de Resumen General */}
+      <Card className="border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <h5 className="fw-bold text-dark m-0">Ocupación global de la playa</h5>
+          <span className="fw-bold text-primary">{totalOcupados} / {capacidadTotal} espacios</span>
+        </div>
+        <ProgressBar 
+          now={porcentajeTotal} 
+          label={`${porcentajeTotal}%`} 
+          className="rounded-pill" 
+          style={{ height: '20px', fontSize: '0.85rem', fontWeight: 'bold' }} 
+        />
       </Card>
-    </section>
+
+      {/* Detalle por Sectores */}
+      <Row className="g-4">
+        {/* Planta Baja */}
+        <Col xs={12} lg={6}>
+          <Card className="border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div className="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 className="fw-bold text-dark mb-1">{plantaBaja.nombre}</h5>
+                <Badge bg="primary" className="bg-opacity-10 text-primary fw-semibold px-2 py-1">
+                  {plantaBaja.tipo}
+                </Badge>
+              </div>
+              <span className="fw-bold text-dark fs-5">{plantaBaja.ocupados} / {plantaBaja.total}</span>
+            </div>
+
+            <p className="text-muted small mb-3">
+              Sector cubierto en planta baja. Aquí se encuentran ubicados los <strong>8 abonados</strong> del sistema.
+            </p>
+
+            <div className="mb-3">
+              <div className="d-flex justify-content-between small text-muted mb-1">
+                <span>Ocupación del sector</span>
+                <span>{porcentajePB}%</span>
+              </div>
+              <ProgressBar now={porcentajePB} variant="primary" className="rounded-pill" style={{ height: '10px' }} />
+            </div>
+
+            <div className="p-3 bg-light rounded-3 border mt-auto">
+              <span className="fw-bold text-dark d-block mb-1 small">
+                <i className="bi bi-info-circle me-1 text-primary"></i> Estado actual
+              </span>
+              <span className="text-muted small">8 espacios ocupados por titulares de abonos. Restan {plantaBaja.total - plantaBaja.ocupados} libres.</span>
+            </div>
+          </Card>
+        </Col>
+
+        {/* Planta Alta */}
+        <Col xs={12} lg={6}>
+          <Card className="border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div className="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 className="fw-bold text-dark mb-1">{plantaAlta.nombre}</h5>
+                <Badge bg="success" className="bg-opacity-10 text-success fw-semibold px-2 py-1">
+                  {plantaAlta.tipo}
+                </Badge>
+              </div>
+              <span className="fw-bold text-dark fs-5">{plantaAlta.ocupados} / {plantaAlta.total}</span>
+            </div>
+
+            <p className="text-muted small mb-3">
+              Sector superior destinado a estadías temporales, tarifas por hora y rotación general de vehículos.
+            </p>
+
+            <div className="mb-3">
+              <div className="d-flex justify-content-between small text-muted mb-1">
+                <span>Ocupación del sector</span>
+                <span>{porcentajePA}%</span>
+              </div>
+              <ProgressBar now={porcentajePA} variant="success" className="rounded-pill" style={{ height: '10px' }} />
+            </div>
+
+            <div className="p-3 bg-light rounded-3 border mt-auto">
+              <span className="fw-bold text-dark d-block mb-1 small">
+                <i className="bi bi-info-circle me-1 text-success"></i> Estado actual
+              </span>
+              <span className="text-muted small">Sin vehículos ocasionales cargados. Restan {plantaAlta.total - plantaAlta.ocupados} espacios libres.</span>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

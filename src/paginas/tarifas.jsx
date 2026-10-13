@@ -1,135 +1,177 @@
-import Container from "react-bootstrap/Container";
-import { Form, Button, Row, Col, Card } from "react-bootstrap";
-import { useState } from "react";
+import { useState } from 'react';
+import { Container, Row, Col, Card, Table, Badge, Button, Form, Modal } from 'react-bootstrap';
 
-const tarifasPredeterminadas = [
-  { tipo: "automovil", nombre: "Automóvil", monto: 2500 },
-  { tipo: "moto", nombre: "Moto", monto: 1500 },
-  { tipo: "camioneta", nombre: "Camioneta", monto: 3500 },
+const TARIFAS_INICIALES = [
+  { id: 1, tipo: 'Auto', categoria: 'Por hora', valor: '$ 2.400', sector: 'General / Ocasional', estado: 'Vigente' },
+  { id: 2, tipo: 'Moto', categoria: 'Por hora', valor: '$ 1.200', sector: 'General / Ocasional', estado: 'Vigente' },
+  { id: 3, tipo: 'Camioneta', categoria: 'Por hora', valor: '$ 3.500', sector: 'General / Ocasional', estado: 'Vigente' },
+  { id: 4, tipo: 'Estadía', categoria: 'Hasta 12 horas', valor: '$ 14.000', sector: 'General / Ocasional', estado: 'Vigente' },
+  { id: 5, tipo: 'Abono Mensual', categoria: 'Mensual (Sector A)', valor: '$ 35.000', sector: 'Sector A (Techado)', estado: 'Vigente' },
 ];
 
-function Tarifas() {
-  const [tarifas, setTarifas] = useState(tarifasPredeterminadas);
-  const [tipoSeleccionado, setTipoSeleccionado] = useState("automovil");
-  const [monto, setMonto] = useState("2500");
-  const [mensaje, setMensaje] = useState("");
+function cargarTarifas() {
+  const tarifasGuardadas = localStorage.getItem('tarifasEstacionamiento');
+  if (!tarifasGuardadas) return TARIFAS_INICIALES;
 
-  function seleccionarVehiculo(event) {
-    const tipo = event.target.value;
-    const tarifa = tarifas.find((item) => item.tipo === tipo);
-    setTipoSeleccionado(tipo);
-    setMonto(tarifa.monto);
-    setMensaje("");
-  }
-
-  function actualizarTarifa(event) {
-    event.preventDefault();
-
-    if (monto <= 0 || monto === "") {
-      setMensaje("Ingresá un monto mayor que cero.");
-      return;
-    }
-
-    setTarifas(
-      tarifas.map((tarifa) => {
-        if (tarifa.tipo === tipoSeleccionado) {
-          return { ...tarifa, monto: Number(monto) };
-        }
-        return tarifa;
-      }),
-    );
-
-    setMensaje("¡Tarifa actualizada correctamente!");
-  }
-
-  return (
-    <Container as="section" className="py-5" id="tarifas">
-      <Card className="shadow-sm border-0 rounded-4 p-4 p-md-5">
-        <Card.Body className="text-center p-0 mb-4">
-          <Card.Title className="mb-2 fw-bold text-primary display-6">
-            Gestión de Tarifas
-          </Card.Title>
-          <Card.Text className="text-muted fs-5">
-            Administración y actualización de tarifas del estacionamiento.
-          </Card.Text>
-        </Card.Body>
-
-        <Form
-          className="p-4 border rounded shadow-sm bg-light"
-          onSubmit={actualizarTarifa}
-        >
-          <Row className="g-4">
-            <Col md={6} xs={12}>
-              <Form.Group controlId="tipoVehiculoTarifa">
-                <Form.Label className="fw-semibold text-primary">
-                  Tipo de Vehículo
-                </Form.Label>
-                <Form.Select
-                  value={tipoSeleccionado}
-                  onChange={seleccionarVehiculo}
-                >
-                  {tarifas.map((tarifa) => (
-                    <option key={tarifa.tipo} value={tarifa.tipo}>
-                      {tarifa.nombre}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={6} xs={12}>
-              <Form.Group controlId="montoTarifa">
-                <Form.Label className="fw-semibold text-primary">
-                  Monto por hora
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Ingrese el monto"
-                  value={monto}
-                  onChange={(event) => {
-                    setMonto(event.target.value);
-                    setMensaje("");
-                  }}
-                  required
-                />
-              </Form.Group>
-            </Col>
-            <Col className="text-center" xs={12}>
-              <Button
-                className="px-4 py-2 fw-semibold"
-                type="submit"
-                variant="primary"
-              >
-                Actualizar Tarifa
-              </Button>
-            </Col>
-          </Row>
-          {mensaje && (
-            <div
-              className={`alert ${mensaje.startsWith("¡") ? "alert-success" : "alert-danger"} mt-3 mb-0`}
-              role="status"
-            >
-              {mensaje}
-            </div>
-          )}
-        </Form>
-
-        <div className="mt-5">
-          <h5 className="text-primary fw-bold mb-3">Tarifas Vigentes</h5>
-          <ul className="list-group">
-            {tarifas.map((tarifa) => (
-              <li
-                key={tarifa.tipo}
-                className="list-group-item d-flex justify-content-between align-items-center"
-              >
-                <span>{tarifa.nombre}</span>
-                <span className="fw-bold text-success">${tarifa.monto}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Card>
-    </Container>
+  const tarifas = JSON.parse(tarifasGuardadas);
+  return TARIFAS_INICIALES.map(
+    (tarifaInicial) =>
+      tarifas.find((tarifa) => tarifa.tipo === tarifaInicial.tipo) ??
+      tarifaInicial,
   );
 }
+
+const Tarifas = () => {
+  const [tarifas, setTarifas] = useState(cargarTarifas);
+
+  // Estados con nombres súper fáciles de entender
+  const [abierto, setAbierto] = useState(false);
+  const [idSeleccionado, setIdSeleccionado] = useState(null);
+  const [textoPrecio, setTextoPrecio] = useState('');
+
+  // Cuando hacés clic en "Editar"
+  const prepararEdicion = (tarifa) => {
+    setIdSeleccionado(tarifa.id);
+    setTextoPrecio(tarifa.valor);
+    setAbierto(true); // Abre la ventanita
+  };
+
+  // Cuando hacés clic en "Guardar cambios"
+  const guardarCambios = (e) => {
+    e.preventDefault();
+    
+    // Recorremos las tarifas y actualizamos la que coincide
+    const tarifasActualizadas = tarifas.map((tarifa) =>
+      tarifa.id === idSeleccionado
+        ? { ...tarifa, valor: textoPrecio }
+        : tarifa,
+    );
+    localStorage.setItem(
+      'tarifasEstacionamiento',
+      JSON.stringify(tarifasActualizadas),
+    );
+    setTarifas(tarifasActualizadas);
+
+    setAbierto(false); // Cierra la ventanita
+  };
+
+  return (
+    <Container className="py-4">
+      <div className="mb-4">
+        <h2 className="fw-bold text-dark m-0">Tarifas vigentes</h2>
+        <p className="text-muted m-0" style={{ fontSize: '0.95rem' }}>
+          Gestión de valores y costos por hora, estadías y abonos mensuales.
+        </p>
+      </div>
+
+      <Row className="g-4">
+        <Col xs={12} lg={8}>
+          <Card className="border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="fw-bold text-dark m-0">Esquema de precios</h5>
+              <span className="text-muted small">Actualizado al periodo actual</span>
+            </div>
+
+            <div className="table-responsive">
+              <Table hover align="middle" className="mb-0 small">
+                <thead className="table-light text-muted">
+                  <tr>
+                    <th>TIPO DE VEHÍCULO</th>
+                    <th>CATEGORÍA</th>
+                    <th>VALOR</th>
+                    <th>SECTOR</th>
+                    <th>ESTADO</th>
+                    <th className="text-end">ACCIÓN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tarifas.map((t) => (
+                    <tr key={t.id}>
+                      <td className="fw-bold text-dark">{t.tipo}</td>
+                      <td className="text-muted">{t.categoria}</td>
+                      <td className="fw-bold text-primary">{t.valor}</td>
+                      <td>{t.sector}</td>
+                      <td>
+                        <Badge bg="success" className="bg-opacity-10 text-success px-2 py-1">
+                          {t.estado}
+                        </Badge>
+                      </td>
+                      <td className="text-end">
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          className="rounded-3 py-1 px-2"
+                          style={{ fontSize: '0.75rem' }}
+                          onClick={() => prepararEdicion(t)}
+                        >
+                          Editar
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={12} lg={4}>
+          <Card className="border-0 shadow-sm rounded-4 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+            <div>
+              <h5 className="fw-bold text-dark mb-3">Información general</h5>
+              <p className="text-muted small mb-3">
+                Las tarifas se aplican de manera automática según el tipo de ingreso registrado en barrera.
+              </p>
+              
+              <div className="p-3 bg-light rounded-3 border mb-3">
+                <span className="fw-bold text-dark d-block mb-1 small"><i className="bi bi-clock me-1 text-primary"></i> Tolerancia de salida</span>
+                <span className="text-muted small">15 minutos libres posteriores al pago de la estadía o ticket por hora.</span>
+              </div>
+
+              <div className="p-3 bg-light rounded-3 border">
+                <span className="fw-bold text-dark d-block mb-1 small"><i className="bi bi-shield-check me-1 text-success"></i> Abonados mensuales</span>
+                <span className="text-muted small">Acceso preferencial asegurado en Planta Baja (Sector A) sin costo adicional por estadía.</span>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-top text-center text-muted small">
+              <i className="bi bi-info-circle me-1"></i> Sistema tarifario operativo.
+            </div>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Ventanita flotante para editar */}
+      <Modal show={abierto} onHide={() => setAbierto(false)} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="fw-bold text-dark fs-5">Actualizar valor de tarifa</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={guardarCambios}>
+            <Form.Group className="mb-3">
+              <Form.Label className="small fw-semibold text-muted">Nuevo monto ($)</Form.Label>
+              <Form.Control
+                type="text"
+                value={textoPrecio}
+                onChange={(e) => setTextoPrecio(e.target.value)}
+                required
+                className="rounded-3"
+                autoFocus
+              />
+            </Form.Group>
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setAbierto(false)} className="rounded-3">
+                Cancelar
+              </Button>
+              <Button variant="primary" size="sm" type="submit" className="rounded-3 fw-semibold">
+                Guardar cambios
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </Container>
+  );
+};
 
 export default Tarifas;

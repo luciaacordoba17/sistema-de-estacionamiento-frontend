@@ -1,97 +1,93 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import {
-  CAPACIDAD_ESTACIONAMIENTO,
-  useOcupacionEstacionamiento,
-} from "../hooks/useOcupacionEstacionamiento";
+import React, { useState } from 'react';
+import { Container, Row, Col, Card, Table, Badge } from 'react-bootstrap';
 
-function Dashboard() {
-  const { vehiculosActuales, espaciosDisponibles } =
-    useOcupacionEstacionamiento();
-  const porcentajeOcupacion = Math.round(
-    (vehiculosActuales / CAPACIDAD_ESTACIONAMIENTO) * 100,
-  );
-  const estadoCapacidad =
-    porcentajeOcupacion >= 90
-      ? "Capacidad casi completa"
-      : porcentajeOcupacion >= 70
-        ? "Capacidad alta"
-        : "Capacidad normal";
+const PanelControl = () => {
+  const [plazasOcupadas] = useState(8);
+  const capacidadTotal = 50;
+  const plazasDisponibles = capacidadTotal - plazasOcupadas;
+  const porcentajeOcupacion = Math.round((plazasOcupadas / capacidadTotal) * 100);
 
   return (
-    <main>
-      {/* PANEL DE CONTROL */}
-      <section id="inicio" className="container py-5">
-        <div className="dashboard-header mb-4">
-          <span className="dashboard-etiqueta">PANEL DE CONTROL</span>
-          <h2>Estado del Estacionamiento</h2>
-          <p>Información actualizada sobre la disponibilidad y ocupación.</p>
+    <Container className="py-4">
+      {/* Encabezado */}
+      <div className="mb-4">
+        <h2 className="fw-bold text-dark m-0">Panel de Control</h2>
+        <p className="text-muted m-0" style={{ fontSize: '0.95rem' }}>
+          Vista general de la operación y estado actual de la playa.
+        </p>
+      </div>
+
+      {/* 4 Tarjetas de Métricas Superiores */}
+      <Row className="g-3 mb-4">
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+            <Card.Body className="p-0">
+              <span className="text-muted small">Ocupación actual</span>
+              <h3 className="fw-bold text-dark my-1">{plazasOcupadas} / {capacidadTotal}</h3>
+              <span className="text-primary small fw-semibold">{porcentajeOcupacion}% de la capacidad</span>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+            <Card.Body className="p-0">
+              <span className="text-muted small">Espacios disponibles</span>
+              <h3 className="fw-bold text-dark my-1">{plazasDisponibles}</h3>
+              <span className="text-muted small">Libres en playa</span>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+            <Card.Body className="p-0">
+              <span className="text-muted small">Abonos activos</span>
+              <h3 className="fw-bold text-dark my-1">8</h3>
+              <span className="text-success small fw-semibold">Ubicados en Planta Baja</span>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
+            <Card.Body className="p-0">
+              <span className="text-muted small">Estado del sistema</span>
+              <h3 className="fw-bold text-success my-1">En línea</h3>
+              <span className="text-success small fw-semibold">Sincronizado con JSON</span>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Tabla de Control de Accesos */}
+      <Card className="border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h5 className="fw-bold text-dark mb-3">Control de accesos activos</h5>
+        <div className="table-responsive">
+          <Table hover align="middle" className="mb-0 small">
+            <thead className="table-light text-muted">
+              <tr>
+                <th>SECTOR</th>
+                <th>DESCRIPCIÓN</th>
+                <th>CANTIDAD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="fw-bold text-dark">Sector A (Planta Baja - Techado)</td>
+                <td>
+                  <Badge bg="secondary" className="bg-opacity-10 text-dark fw-semibold px-2 py-1">
+                    Disponible general (Abonados ubicados aquí)
+                  </Badge>
+                </td>
+                <td className="fw-bold text-primary">8 ocupados</td>
+              </tr>
+            </tbody>
+          </Table>
         </div>
-
-        <Row className="g-4">
-          {/*Espacios Disponibles */}
-          <Col xs={12} md={4}>
-            <article className="dashboard-card h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
-              <div className="dashboard-icon text-primary">
-                <i className="bi bi-p-square-fill"></i>
-              </div>
-              <div className="dashboard-content">
-                <span className="dashboard-label fw-semibold text-primary">
-                  ESPACIOS DISPONIBLES
-                </span>
-                <p id="espacios-disponibles" className="dashboard-number">
-                  {espaciosDisponibles} / {CAPACIDAD_ESTACIONAMIENTO}
-                </p>
-                <small>Espacios libres actualmente</small>
-              </div>
-            </article>
-          </Col>
-
-          {/* Vehículos Actuales */}
-          <Col xs={12} md={4}>
-            <article className="dashboard-card h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
-              <div className="dashboard-icon text-primary">
-                <i className="bi bi-car-front-fill"></i>
-              </div>
-              <div className="dashboard-content">
-                <span className="dashboard-label fw-semibold text-primary">
-                  VEHÍCULOS ACTUALES
-                </span>
-                <p id="vehiculos-actuales" className="dashboard-number">
-                  {vehiculosActuales}
-                </p>
-                <small>Vehículos dentro del estacionamiento</small>
-              </div>
-            </article>
-          </Col>
-
-          {/* Estado del Sistema */}
-          <Col xs={12} md={4}>
-            <article className="dashboard-card dashboard-card-estado h-100 p-3 bg-white rounded-3 border-start border-3 border-info shadow-sm">
-              <div className="dashboard-icon text-primary">
-                <i className="bi bi-percent"></i>
-              </div>
-              <div className="dashboard-content">
-                <span className="dashboard-label fw-semibold text-primary">
-                  ESTADO DEL SISTEMA
-                </span>
-                <p id="estado-sistema" className="estado-texto">
-                  <span
-                    id="estado-indicador"
-                    className="estado-indicador"
-                  ></span>
-                  <span id="texto-estado">{estadoCapacidad}</span>
-                </p>
-                <small id="porcentaje-ocupacion">
-                  {porcentajeOcupacion}% de ocupación
-                </small>
-              </div>
-            </article>
-          </Col>
-        </Row>
-      </section>
-    </main>
+      </Card>
+    </Container>
   );
-}
+};
 
-export default Dashboard;
+export default PanelControl;
