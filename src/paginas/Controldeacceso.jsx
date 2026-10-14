@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Badge, Table, Tabs, Tab } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
+// Tarifas
 const TARIFAS_POR_HORA = {
   Auto: 2400,
   Moto: 1200,
@@ -9,22 +10,7 @@ const TARIFAS_POR_HORA = {
 };
 
 function obtenerTarifaPorHora(tipoVehiculo) {
-  const tarifasGuardadas = localStorage.getItem('tarifasEstacionamiento');
-  if (!tarifasGuardadas) return TARIFAS_POR_HORA[tipoVehiculo];
-
-  const tarifa = JSON.parse(tarifasGuardadas).find(
-    (item) => item.tipo === tipoVehiculo,
-  );
-  if (!tarifa) return TARIFAS_POR_HORA[tipoVehiculo];
-
-  const valor = Number(
-    String(tarifa.valor)
-      .replace(/\$/g, '')
-      .replace(/\s/g, '')
-      .replace(/\./g, '')
-      .replace(',', '.'),
-  );
-  return Number.isFinite(valor) ? valor : TARIFAS_POR_HORA[tipoVehiculo];
+  return TARIFAS_POR_HORA[tipoVehiculo] || 2000;
 }
 
 function obtenerHoraActual() {
@@ -125,7 +111,6 @@ const ControlAcceso = () => {
       ? `${horasTotales}h ${minutosRestantes > 0 ? minutosRestantes + 'm' : ''}` 
       : `${minutosRestantes} minutos`;
 
-    // CÁLCULO ESTRICTO POR HORA Y TIPO DE VEHÍCULO
     let descripcionTarifa = '';
 
     if (vehiculoEncontrado.condicion === 'Abonado') {

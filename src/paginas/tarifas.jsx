@@ -6,53 +6,34 @@ const TARIFAS_INICIALES = [
   { id: 2, tipo: 'Moto', categoria: 'Por hora', valor: '$ 1.200', sector: 'General / Ocasional', estado: 'Vigente' },
   { id: 3, tipo: 'Camioneta', categoria: 'Por hora', valor: '$ 3.500', sector: 'General / Ocasional', estado: 'Vigente' },
   { id: 4, tipo: 'Estadía', categoria: 'Hasta 12 horas', valor: '$ 14.000', sector: 'General / Ocasional', estado: 'Vigente' },
-  { id: 5, tipo: 'Abono Mensual', categoria: 'Mensual (Sector A)', valor: '$ 35.000', sector: 'Sector A (Techado)', estado: 'Vigente' },
+  { id: 5, tipo: 'Abono Mensual', categoria: 'Mensual (Sector A)', valor: '$ 180.000', sector: 'Sector A (Techado)', estado: 'Vigente' },
 ];
 
-function cargarTarifas() {
-  const tarifasGuardadas = localStorage.getItem('tarifasEstacionamiento');
-  if (!tarifasGuardadas) return TARIFAS_INICIALES;
-
-  const tarifas = JSON.parse(tarifasGuardadas);
-  return TARIFAS_INICIALES.map(
-    (tarifaInicial) =>
-      tarifas.find((tarifa) => tarifa.tipo === tarifaInicial.tipo) ??
-      tarifaInicial,
-  );
-}
-
 const Tarifas = () => {
-  const [tarifas, setTarifas] = useState(cargarTarifas);
-
-  // Estados con nombres súper fáciles de entender
+  const [tarifas, setTarifas] = useState(TARIFAS_INICIALES);
   const [abierto, setAbierto] = useState(false);
   const [idSeleccionado, setIdSeleccionado] = useState(null);
   const [textoPrecio, setTextoPrecio] = useState('');
 
-  // Cuando hacés clic en "Editar"
+  
   const prepararEdicion = (tarifa) => {
     setIdSeleccionado(tarifa.id);
     setTextoPrecio(tarifa.valor);
-    setAbierto(true); // Abre la ventanita
-  };
+    setAbierto(true); 
 
-  // Cuando hacés clic en "Guardar cambios"
+  
   const guardarCambios = (e) => {
     e.preventDefault();
     
-    // Recorremos las tarifas y actualizamos la que coincide
+    
     const tarifasActualizadas = tarifas.map((tarifa) =>
       tarifa.id === idSeleccionado
         ? { ...tarifa, valor: textoPrecio }
         : tarifa,
     );
-    localStorage.setItem(
-      'tarifasEstacionamiento',
-      JSON.stringify(tarifasActualizadas),
-    );
+    
     setTarifas(tarifasActualizadas);
-
-    setAbierto(false); // Cierra la ventanita
+    setAbierto(false);
   };
 
   return (
@@ -173,5 +154,5 @@ const Tarifas = () => {
     </Container>
   );
 };
-
-export default Tarifas;
+}
+export default Tarifas; 

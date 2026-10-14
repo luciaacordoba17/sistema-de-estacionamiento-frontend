@@ -17,7 +17,6 @@ const PanelControl = () => {
         </p>
       </div>
 
-      {/* 4 Tarjetas de Métricas Superiores */}
       <Row className="g-3 mb-4">
         <Col xs={12} sm={6} lg={3}>
           <Card className="border-0 shadow-sm rounded-4 p-3 h-100 bg-white">
