@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation } from "react-router-dom";
 import CustomNavbar from "./componentes/Navbar";
 import Rutas from "./componentes/routes/Rutas";
@@ -6,7 +7,7 @@ import Footer from "./componentes/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-function AppLayout() {
+function AppLayout({ vehiculos, setVehiculos }) {
   const { pathname } = useLocation();
   const esInicio = pathname === "/";
 
@@ -14,7 +15,8 @@ function AppLayout() {
     <div className="d-flex flex-column min-vh-100">
       {!esInicio && <CustomNavbar />}
       <main className="flex-fill">
-        <Rutas />
+        {/* Le inyectamos los vehículos y el setVehiculos a Rutas */}
+        <Rutas vehiculos={vehiculos} setVehiculos={setVehiculos} />
       </main>
       {!esInicio && <Footer />}
     </div>
@@ -22,7 +24,12 @@ function AppLayout() {
 }
 
 function App() {
-  return <AppLayout />;
+  const [vehiculos, setVehiculos] = useState([]);
+
+  return (
+    // Se lo pasamos a AppLayout para que baje a todo el sistema
+    <AppLayout vehiculos={vehiculos} setVehiculos={setVehiculos} />
+  );
 }
 
 export default App;
