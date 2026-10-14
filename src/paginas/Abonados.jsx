@@ -1,33 +1,49 @@
-import { useState, useEffect, useRef } from 'react';
-import { Container, Table, Badge, Button, Modal, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Container, Table, Badge, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import axios from 'axios';
 import Swal from 'sweetalert2';
-import abonadosIniciales from '../datos/abonados.json';
+
+const URL_ABONADOS = import.meta.env.VITE_API_URL || '/abonados.json';
 
 const Abonados = () => {
-  const alarmaMostrada = useRef(false);
-
-  //Guardamos la lista en un estado para poder sumarle nuevos
-  const [listaAbonados, setListaAbonados] = useState(abonadosIniciales);
-
+  const [listaAbonados, setListaAbonados] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
   const [ventanitaAbierta, setVentanitaAbierta] = useState(false);
   const [nombre, setNombre] = useState('');
   const [dni, setDni] = useState('');
   const [vehiculo, setVehiculo] = useState('');
   const [patente, setPatente] = useState('');
-
+  
   useEffect(() => {
-    if (alarmaMostrada.current) return;
+    const obtenerAbonados = async () => {
+      try {
+        const respuesta = await axios.get(URL_ABONADOS)
+        setListaAbonados(respuesta.data)
+        Swal.fire({
+          title: '¡Datos cargados!',
+          text: `Se cargaron correctamente ${respuesta.data.length} abonados desde el archivo JSON.`,
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        })
+      } catch (errorSolicitud) {
+        console.error('Error al cargar los abonados:', errorSolicitud)
+        setError('No se pudieron cargar los abonados. Intentá nuevamente más tarde.')
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los abonados del archivo.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        })
+      } finally {
+        setCargando(false)
+      }
+    }
 
-    alarmaMostrada.current = true;
-    Swal.fire({
-      title: '¡Datos cargados!',
-      text: `Se cargaron correctamente ${listaAbonados.length} abonados.`,
-      icon: 'success',
-      confirmButtonText: 'Aceptar',
-    });
-  }, [listaAbonados.length]);
+    obtenerAbonados()
+  }, [])
 
-  //Función para guardar el nuevo abonado
+  // Función para guardar el nuevo abonado
   const agregarAbonado = (e) => {
     e.preventDefault();
 
@@ -41,11 +57,9 @@ const Abonados = () => {
       estado: 'Activo'
     };
 
-    // Sumamos el nuevo a la lista y cerramos la ventana
     setListaAbonados([nuevoAbonado, ...listaAbonados]);
     setVentanitaAbierta(false);
 
-    // Limpiamos los campos
     setNombre('');
     setDni('');
     setVehiculo('');
@@ -62,7 +76,6 @@ const Abonados = () => {
 
   return (
     <Container className="py-4">
-      {/* Botón para abrir la ventana */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2 className="text-dark fw-bold m-0">Gestión de Abonados</h2>
@@ -93,7 +106,22 @@ const Abonados = () => {
           </tr>
         </thead>
         <tbody>
-          {listaAbonados.map((abonado) => (
+          {cargando ? (
+            <tr>
+              <td colSpan="7" className="text-center py-4">
+                <Spinner animation="border" size="sm" className="me-2" />
+                Cargando abonados...
+              </td>
+            </tr>
+          ) : error ? (
+            <tr>
+              <td colSpan="7" className="text-center text-danger py-4">{error}</td>
+            </tr>
+          ) : listaAbonados.length === 0 ? (
+            <tr>
+              <td colSpan="7" className="text-center text-muted py-4">No hay abonados registrados.</td>
+            </tr>
+          ) : listaAbonados.map((abonado) => (
             <tr key={abonado.id}>
               <td>{abonado.id}</td>
               <td className="fw-semibold">{abonado.nombre}</td>
