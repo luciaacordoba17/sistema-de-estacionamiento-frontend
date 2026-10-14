@@ -7,13 +7,13 @@ import Abonados from "../../paginas/Abonados";
 import Tarifas from "../../paginas/tarifas.jsx";
 import Error404 from "../../paginas/Error404";
 
-const Rutas = () => {
+const Rutas = ({ vehiculos, setVehiculos }) => {
   return (
     <Routes>
       <Route path="/" element={<Pantalladeinicio />} />
-      <Route path="/panel" element={<Paneldecontrol />} />
-      <Route path="/acceso" element={<Controldeacceso />} />
-      <Route path="/espacios" element={<Espaciosysectores />} />
+      <Route path="/panel" element={<Paneldecontrol vehiculos={vehiculos} />} />
+      <Route path="/acceso" element={<Controldeacceso vehiculos={vehiculos} setVehiculos={setVehiculos} />} />
+      <Route path="/espacios" element={<Espaciosysectores vehiculos={vehiculos} />} />
       <Route path="/abonados" element={<Abonados />} />
       <Route path="/tarifas" element={<Tarifas />} />
       <Route path="*" element={<Error404 />} />
