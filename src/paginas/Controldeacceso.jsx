@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Badge, Table, Tabs, Tab } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
@@ -27,9 +27,19 @@ const ControlAcceso = () => {
   const [sectorDestino, setSectorDestino] = useState('Planta Alta (Sector B - General)');
   const [horaIngresoManual, setHoraIngresoManual] = useState(obtenerHoraActual);
   
-  const [vehiculos, setVehiculos] = useState([]);
+  // Inicializamos leyendo del localStorage para que no se borre nunca al cambiar de página
+  const [vehiculos, setVehiculos] = useState(() => {
+    const guardados = localStorage.getItem('vehiculos_estacionamiento');
+    return guardados ? JSON.parse(guardados) : [];
+  });
+
   const [patenteEgreso, setPatenteEgreso] = useState('');
   const [horaEgresoManual, setHoraEgresoManual] = useState('10:00');
+
+  // Guardamos automáticamente en el localStorage cada vez que la lista de vehículos cambie
+  useEffect(() => {
+    localStorage.setItem('vehiculos_estacionamiento', JSON.stringify(vehiculos));
+  }, [vehiculos]);
 
   const convertirAMinutos = (horaStr) => {
     if (!horaStr) return 0;
@@ -279,7 +289,7 @@ const ControlAcceso = () => {
                   {vehiculos.length === 0 ? (
                     <tr>
                       <td colSpan="6" className="text-center text-muted py-4">
-                        No hay movimientos registrados en la sesión actual.
+                        No hay movimientos registrados.
                       </td>
                     </tr>
                   ) : (
