@@ -20,6 +20,7 @@ const Tarifas = () => {
     setIdSeleccionado(tarifa.id);
     setTextoPrecio(tarifa.valor);
     setAbierto(true); 
+  };
 
   
   const guardarCambios = (e) => {
@@ -154,5 +155,5 @@ const Tarifas = () => {
     </Container>
   );
 };
-}
+
 export default Tarifas; 
