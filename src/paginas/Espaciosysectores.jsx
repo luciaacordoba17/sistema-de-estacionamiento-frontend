@@ -1,25 +1,31 @@
-import React, { useState } from 'react';
 import { Container, Row, Col, Card, Badge, ProgressBar } from 'react-bootstrap';
 
-const EspaciosSectores = () => {
-  // Configuración de los sectores con los 8 abonados en Planta Baja
-  const [plantaBaja] = useState({
+const EspaciosSectores = ({ vehiculos = [] }) => {
+  const vehiculosEstacionados = vehiculos.filter((vehiculo) => vehiculo.estado === 'Estacionado');
+  const vehiculosPlantaBaja = vehiculosEstacionados.filter((vehiculo) =>
+    vehiculo.sector && vehiculo.sector.startsWith('Planta Baja')
+  );
+  const vehiculosPlantaAlta = vehiculosEstacionados.filter((vehiculo) =>
+    vehiculo.sector && vehiculo.sector.startsWith('Planta Alta')
+  );
+
+  const plantaBaja = {
     nombre: 'Sector A (Planta Baja - Techado)',
     total: 25,
-    ocupados: 8, // Los 8 abonados del JSON
+    ocupados: 8 + vehiculosPlantaBaja.length,
     tipo: 'General / Abonados'
-  });
+  };
 
-  const [plantaAlta] = useState({
+  const plantaAlta = {
     nombre: 'Sector B (Planta Alta - Ocasional)',
     total: 25,
-    ocupados: 0, // Vacío para mostrar en vivo
+    ocupados: vehiculosPlantaAlta.length,
     tipo: 'General por Hora'
-  });
+  };
 
   const totalOcupados = plantaBaja.ocupados + plantaAlta.ocupados;
   const capacidadTotal = plantaBaja.total + plantaAlta.total;
-  const porcentajeTotal = Math.round((totalOcupados / capacidadTotal) * 100);
+  const porcentajeTotal = Math.min(100, Math.round((totalOcupados / capacidadTotal) * 100));
 
   const porcentajePB = Math.round((plantaBaja.ocupados / plantaBaja.total) * 100);
   const porcentajePA = Math.round((plantaAlta.ocupados / plantaAlta.total) * 100);
@@ -63,7 +69,7 @@ const EspaciosSectores = () => {
             </div>
 
             <p className="text-muted small mb-3">
-              Sector cubierto en planta baja. Aquí se encuentran ubicados los <strong>8 abonados</strong> del sistema.
+              Sector cubierto en planta baja. Incluye 8 espacios asignados a abonados y los vehículos ingresados en este sector.
             </p>
 
             <div className="mb-3">
@@ -78,7 +84,12 @@ const EspaciosSectores = () => {
               <span className="fw-bold text-dark d-block mb-1 small">
                 <i className="bi bi-info-circle me-1 text-primary"></i> Estado actual
               </span>
-              <span className="text-muted small">8 espacios ocupados por titulares de abonos. Restan {plantaBaja.total - plantaBaja.ocupados} libres.</span>
+              <span className="text-muted small">
+                8 espacios asignados a abonados y{' '}
+                {vehiculosPlantaBaja.length === 1
+                  ? '1 vehículo ingresado'
+                  : `${vehiculosPlantaBaja.length} vehículos ingresados`}. Restan {plantaBaja.total - plantaBaja.ocupados} libres.
+              </span>
             </div>
           </Card>
         </Col>
@@ -112,7 +123,14 @@ const EspaciosSectores = () => {
               <span className="fw-bold text-dark d-block mb-1 small">
                 <i className="bi bi-info-circle me-1 text-success"></i> Estado actual
               </span>
-              <span className="text-muted small">Sin vehículos ocasionales cargados. Restan {plantaAlta.total - plantaAlta.ocupados} espacios libres.</span>
+              <span className="text-muted small">
+                {vehiculosPlantaAlta.length === 0
+                  ? 'Sin vehículos ingresados.'
+                  : vehiculosPlantaAlta.length === 1
+                    ? '1 vehículo ingresado.'
+                    : `${vehiculosPlantaAlta.length} vehículos ingresados.`}{' '}
+                Restan {plantaAlta.total - plantaAlta.ocupados} espacios libres.
+              </span>
             </div>
           </Card>
         </Col>
