@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import CustomNavbar from "./componentes/Navbar";
 import Rutas from "./componentes/routes/Rutas";
@@ -24,7 +24,14 @@ function AppLayout({ vehiculos, setVehiculos }) {
 }
 
 function App() {
-  const [vehiculos, setVehiculos] = useState([]);
+  const [vehiculos, setVehiculos] = useState(() => {
+    const guardados = localStorage.getItem('vehiculos_estacionamiento');
+    return guardados ? JSON.parse(guardados) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vehiculos_estacionamiento', JSON.stringify(vehiculos));
+  }, [vehiculos]);
 
   return (
     // Se lo pasamos a AppLayout para que baje a todo el sistema
