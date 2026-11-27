@@ -3,7 +3,7 @@ import { Container, Table, Badge, Button, Modal, Form, Spinner } from 'react-boo
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const URL_ABONADOS = import.meta.env.VITE_API_URL || '/abonados.json';
+const URL_ABONADOS = '/abonados.json';
 const CLAVE_ABONADOS = 'abonados_estacionamiento';
 
 const Abonados = () => {
