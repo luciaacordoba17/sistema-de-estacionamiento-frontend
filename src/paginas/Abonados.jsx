@@ -4,6 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const URL_ABONADOS = import.meta.env.VITE_API_URL || '/abonados.json';
+const CLAVE_ABONADOS = 'abonados_estacionamiento';
 
 const Abonados = () => {
   const [listaAbonados, setListaAbonados] = useState([]);
@@ -19,10 +20,12 @@ const Abonados = () => {
     const obtenerAbonados = async () => {
       try {
         const respuesta = await axios.get(URL_ABONADOS)
-        setListaAbonados(respuesta.data)
+        const abonadosGuardados = localStorage.getItem(CLAVE_ABONADOS);
+        const abonados = abonadosGuardados ? JSON.parse(abonadosGuardados) : respuesta.data;
+        setListaAbonados(abonados)
         Swal.fire({
           title: '¡Datos cargados!',
-          text: `Se cargaron correctamente ${respuesta.data.length} abonados desde el archivo JSON.`,
+          text: `Se cargaron correctamente ${abonados.length} abonados.`,
           icon: 'success',
           confirmButtonText: 'Aceptar',
         })
@@ -48,7 +51,7 @@ const Abonados = () => {
     e.preventDefault();
 
     const nuevoAbonado = {
-      id: listaAbonados.length + 1,
+      id: Date.now(),
       nombre,
       dni,
       vehiculo,
@@ -57,7 +60,9 @@ const Abonados = () => {
       estado: 'Activo'
     };
 
-    setListaAbonados([nuevoAbonado, ...listaAbonados]);
+    const abonadosActualizados = [nuevoAbonado, ...listaAbonados];
+    setListaAbonados(abonadosActualizados);
+    localStorage.setItem(CLAVE_ABONADOS, JSON.stringify(abonadosActualizados));
     setVentanitaAbierta(false);
 
     setNombre('');
@@ -72,6 +77,24 @@ const Abonados = () => {
       timer: 1500,
       showConfirmButton: false
     });
+  };
+
+  const eliminarAbonado = async (abonado) => {
+    const confirmacion = await Swal.fire({
+      title: '¿Eliminar abonado?',
+      text: `Se eliminará a ${abonado.nombre} de la lista de abonados.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#dc3545',
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    const abonadosActualizados = listaAbonados.filter((item) => item.id !== abonado.id);
+    setListaAbonados(abonadosActualizados);
+    localStorage.setItem(CLAVE_ABONADOS, JSON.stringify(abonadosActualizados));
   };
 
   return (
@@ -103,23 +126,24 @@ const Abonados = () => {
             <th>Patente</th>
             <th>Tipo de Abono</th>
             <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {cargando ? (
             <tr>
-              <td colSpan="7" className="text-center py-4">
+              <td colSpan="8" className="text-center py-4">
                 <Spinner animation="border" size="sm" className="me-2" />
                 Cargando abonados...
               </td>
             </tr>
           ) : error ? (
             <tr>
-              <td colSpan="7" className="text-center text-danger py-4">{error}</td>
+              <td colSpan="8" className="text-center text-danger py-4">{error}</td>
             </tr>
           ) : listaAbonados.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center text-muted py-4">No hay abonados registrados.</td>
+              <td colSpan="8" className="text-center text-muted py-4">No hay abonados registrados.</td>
             </tr>
           ) : listaAbonados.map((abonado) => (
             <tr key={abonado.id}>
@@ -137,6 +161,16 @@ const Abonados = () => {
                 <Badge bg={abonado.estado === 'Activo' ? 'success' : 'danger'} className="px-2 py-1">
                   {abonado.estado}
                 </Badge>
+              </td>
+              <td>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  aria-label={`Eliminar abonado ${abonado.nombre}`}
+                  onClick={() => eliminarAbonado(abonado)}
+                >
+                  <i className="bi bi-trash me-1"></i>Eliminar
+                </Button>
               </td>
             </tr>
           ))}

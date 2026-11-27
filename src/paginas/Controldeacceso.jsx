@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Badge, Table, Tabs, Tab } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
@@ -20,26 +20,15 @@ function obtenerHoraActual() {
   });
 }
 
-const ControlAcceso = () => {
+const ControlAcceso = ({ vehiculos, setVehiculos }) => {
   const [patenteIngreso, setPatenteIngreso] = useState('');
   const [tipoVehiculo, setTipoVehiculo] = useState('Auto');
   const [condicionVehiculo, setCondicionVehiculo] = useState('Ocasional'); // Ocasional o Abonado
   const [sectorDestino, setSectorDestino] = useState('Planta Alta (Sector B - General)');
   const [horaIngresoManual, setHoraIngresoManual] = useState(obtenerHoraActual);
   
-  // Inicializamos leyendo del localStorage para que no se borre nunca al cambiar de página
-  const [vehiculos, setVehiculos] = useState(() => {
-    const guardados = localStorage.getItem('vehiculos_estacionamiento');
-    return guardados ? JSON.parse(guardados) : [];
-  });
-
   const [patenteEgreso, setPatenteEgreso] = useState('');
   const [horaEgresoManual, setHoraEgresoManual] = useState('10:00');
-
-  // Guardamos automáticamente en el localStorage cada vez que la lista de vehículos cambie
-  useEffect(() => {
-    localStorage.setItem('vehiculos_estacionamiento', JSON.stringify(vehiculos));
-  }, [vehiculos]);
 
   const convertirAMinutos = (horaStr) => {
     if (!horaStr) return 0;
@@ -70,7 +59,7 @@ const ControlAcceso = () => {
       estado: 'Estacionado',
     };
 
-    setVehiculos([nuevoVehiculo, ...vehiculos]);
+    setVehiculos((vehiculosActuales) => [nuevoVehiculo, ...vehiculosActuales]);
     setPatenteIngreso('');
 
     Swal.fire({
@@ -132,7 +121,7 @@ const ControlAcceso = () => {
       descripcionTarifa = `$ ${totalPagar.toLocaleString('es-AR')} (${tiempoTexto})`;
     }
 
-    setVehiculos(vehiculos.map(v => 
+    setVehiculos(vehiculosActuales => vehiculosActuales.map(v =>
       v.patente === patenteBuscada && v.estado === 'Estacionado'
         ? { ...v, estado: 'Retirado', horaEgreso: horaSalidaLimpia, tarifa: descripcionTarifa }
         : v

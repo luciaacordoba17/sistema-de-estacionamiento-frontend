@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { Container, Row, Col, Card, Table, Badge } from 'react-bootstrap';
 
-const PanelControl = () => {
-  const [plazasOcupadas] = useState(8);
+const PanelControl = ({ vehiculos = [] }) => {
+  const vehiculosEstacionados = vehiculos.filter((vehiculo) => vehiculo.estado === 'Estacionado');
+  const plazasOcupadas = 8 + vehiculosEstacionados.length;
   const capacidadTotal = 50;
   const plazasDisponibles = capacidadTotal - plazasOcupadas;
   const porcentajeOcupacion = Math.round((plazasOcupadas / capacidadTotal) * 100);
@@ -66,21 +66,32 @@ const PanelControl = () => {
           <Table hover align="middle" className="mb-0 small">
             <thead className="table-light text-muted">
               <tr>
+                <th>PATENTE</th>
+                <th>TIPO / CONDICIÓN</th>
                 <th>SECTOR</th>
-                <th>DESCRIPCIÓN</th>
-                <th>CANTIDAD</th>
+                <th>HORA DE INGRESO</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="fw-bold text-dark">Sector A (Planta Baja - Techado)</td>
-                <td>
-                  <Badge bg="secondary" className="bg-opacity-10 text-dark fw-semibold px-2 py-1">
-                    Disponible general (Abonados ubicados aquí)
-                  </Badge>
-                </td>
-                <td className="fw-bold text-primary">8 ocupados</td>
-              </tr>
+              {vehiculosEstacionados.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="text-center text-muted py-4">
+                    No hay vehículos ingresados.
+                  </td>
+                </tr>
+              ) : vehiculosEstacionados.map((vehiculo) => (
+                <tr key={vehiculo.id}>
+                  <td className="fw-bold text-dark">{vehiculo.patente}</td>
+                  <td>
+                    {vehiculo.tipo}{' '}
+                    <Badge bg={vehiculo.condicion === 'Abonado' ? 'primary' : 'secondary'}>
+                      {vehiculo.condicion}
+                    </Badge>
+                  </td>
+                  <td>{vehiculo.sector}</td>
+                  <td className="text-success fw-semibold">{vehiculo.horaIngreso}</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </div>
